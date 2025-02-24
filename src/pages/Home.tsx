@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-800 p-4">
-      {/* بخش عکس */}
+
       <div className="w-full flex justify-center mt-4">
         <img src={Firstimage} alt="Background" className="max-w-full h-72 rounded-lg " />
       </div>

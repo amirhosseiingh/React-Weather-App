@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes rain {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
+  }
+  
+  .rain-animation {
+    background: url("/assets/rain.gif") center/cover no-repeat;
+    animation: rain 3s linear infinite;
+  }
+  
+  @keyframes snow {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
+  }
+  
+  .snow-animation {
+    background: url("/assets/snow.gif") center/cover no-repeat;
+    animation: snow 4s linear infinite;
+  }
+  
+  @keyframes clouds {
+    0% { background-position: 0 0; }
+    100% { background-position: 50% 50%; }
+  }
+  
+  .clouds-animation {
+    background: url("/assets/clouds.gif") center/cover no-repeat;
+    animation: clouds 5s linear infinite;
+  }
+  
+  .sunny-animation {
+    background: url("/assets/sunny.gif") center/cover no-repeat;
+  }
+  
