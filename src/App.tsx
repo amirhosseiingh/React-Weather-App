@@ -1,10 +1,19 @@
-function App() {
+import React from 'react';
+import { Route, Routes } from 'react-router';
+import UserAuth from './pages/UserAuth';
+import Home from './pages/Home';
+// import Dashboard from './pages/Dashboard';
+// import Weather from './pages/Weather';
 
-
+const App = () => {
   return (
-    <div className="bg-red-400 text-green-500">
-    test
-    </div>
-  )
-}
-export default App
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/auth" element={<UserAuth />} />
+      {/* <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/weather" element={<Weather />} /> */}
+    </Routes>
+  );
+};
+
+export default App;
