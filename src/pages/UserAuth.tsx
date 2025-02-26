@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import BackGround from '../assets/images/cloud_sky_pink_177313_1366x768.jpg';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import axios from 'axios';
+
 
 const UserAuth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
