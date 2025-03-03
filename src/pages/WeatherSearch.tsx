@@ -2,18 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button, useToast } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import {
-  TiWeatherShower,
-  TiWeatherSnow,
-  TiWeatherStormy,
-  TiWeatherSunny,
-} from 'react-icons/ti';
-import {
-  RangeSlider,
-  RangeSliderTrack,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-} from '@chakra-ui/react';
+import { FaTemperatureArrowDown, FaTemperatureArrowUp } from 'react-icons/fa6';
+import { GiHeavyRain } from 'react-icons/gi';
+import {TiWeatherShower,TiWeatherSnow,TiWeatherStormy,TiWeatherSunny,} from 'react-icons/ti';
+import {RangeSlider,RangeSliderTrack,RangeSliderFilledTrack,RangeSliderThumb,} from '@chakra-ui/react';
 import SearchPageBg from '../assets/images/sanni-sahil-cSm2a_-25YU-unsplash.jpg';
 import { MdDelete, MdFavorite } from 'react-icons/md';
 import { MdFavoriteBorder } from 'react-icons/md';
@@ -22,55 +14,22 @@ import { GrLocation } from 'react-icons/gr';
 import { BASE_SEARCH_URL } from '../apis/api';
 import { API_KEY } from '../apis/api';
 import axios from 'axios';
-
 import snowyBg from '../assets/images/Snowybg.jpg';
 import sunnyBg from '../assets/images/Sunnybg.jpg';
 import cloudyBg from '../assets/images/Cloudybg.jpg';
 import rainyBg from '../assets/images/Rainybg.jpg';
+import { sunnyAnimation } from '../animation/animation';
+import { rainyAnimation } from '../animation/animation';
+import { snowyAnimation } from '../animation/animation';
+import { cloudyAnimation } from '../animation/animation';
+import {WeatherData} from '../interfaces/weatherInterface'
 
-const sunnyAnimation =
-  'https://lottie.host/d9ba54b4-66b1-4f85-a4e8-56a8e110ad1e/aKUbKxVZ7Y.lottie';
-const rainyAnimation =
-  'https://lottie.host/f7d0b36f-296e-4fb0-be0f-980a0225fa5b/xiTeIxkEzi.lottie';
-const snowyAnimation =
-  'https://lottie.host/d8201877-c5f6-495e-958d-ca6444832002/2BPz6iIZFm.lottie';
-const cloudyAnimation =
-  'https://lottie.host/608fe2ed-f9e4-4e0e-9090-a2c505476c2a/00jzIo9BgD.lottie';
-
-interface WeatherData {
-  name: string;
-  sys: {
-    country: string;
-  };
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-  };
-  weather: {
-    main: string;
-    description: string;
-    position: string;
-  }[];
-  clouds: {
-    all: number;
-  };
-  wind: {
-    speed: number;
-  };
-  rain?: {
-    ['1h']?: number;
-  };
-}
 const WeatherSearch: React.FC = () => {
-
   const [city, setCity] = useState<string>('');
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [favorites, setFavorites] = useState<WeatherData[]>([]);
   const [history, setHistory] = useState<WeatherData[]>([]);
   const toast = useToast();
-
 
   useEffect(() => {
     const savedFavorites = localStorage.getItem('favorites');
@@ -82,17 +41,16 @@ const WeatherSearch: React.FC = () => {
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
     }
-  },
-   []);
+  }, []);
 
-   const handleSearch = async () => {
+  const handleSearch = async () => {
     try {
       const response = await axios.get(
         `${BASE_SEARCH_URL}${city}&appid=${API_KEY}`
       );
       const data = response.data;
       setWeatherData(data);
-  
+
       // افزودن شهر جستجو شده به تاریخچه تنها در صورتی که از قبل وجود نداشته باشد
       if (!history.some(item => item.name === data.name)) {
         const newHistory = [...history, data];
@@ -107,14 +65,13 @@ const WeatherSearch: React.FC = () => {
           isClosable: true,
         });
       }
-  
+
       setCity('');
       console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   const getBackgroundImage = (weather: string) => {
     switch (weather) {
@@ -133,20 +90,18 @@ const WeatherSearch: React.FC = () => {
   const handleSaveButton = () => {
     if (weatherData) {
       if (!favorites.some(item => item.name === weatherData.name)) {
-
-        setFavorites ([...favorites, weatherData]);
+        setFavorites([...favorites, weatherData]);
         localStorage.setItem(
           'favorites',
           JSON.stringify([...favorites, weatherData])
         );
         toast({
-            title: 'City added to favorites.',
+          title: 'City added to favorites.',
           description: `${weatherData.name} has been added to your favorite cities.`,
           status: 'success',
           duration: 2000,
           isClosable: true,
         });
-        
       } else {
         toast({
           title: 'City already in favorites.',
@@ -252,20 +207,29 @@ const WeatherSearch: React.FC = () => {
                 Feels Like: {Math.round(weatherData.main.feels_like - 273.15)}°C
               </p>
             </div>
-            <div className="bg-gray-500 p-4 rounded-xl text-center">
-              <p>
-                {Math.round(weatherData.main.temp_min - 273.15)}°C /{' '}
+            <div className="bg-gray-500 p-4 rounded-xl text-center flex flex-row gap-1 ">
+              <p className="flex flex-row items-center justify-center gap-2">
+                {Math.round(weatherData.main.temp_min - 273.15)}°C
+                <FaTemperatureArrowDown />{' '}
+              </p>
+              /
+              <p className="flex flex-row items-center justify-center gap-1">
                 {Math.round(weatherData.main.temp_max - 273.15)}°C
+                <FaTemperatureArrowUp />{' '}
               </p>
             </div>
             <div className="bg-gray-500 p-4 rounded-xl text-center">
               <div className="flex justify-center items-center gap-2">
-                <p>{weatherData.wind.speed} M/S</p>
                 <GiWindSlap />
+                <p>{weatherData.wind.speed} M/S</p>
               </div>
             </div>
-            <div className="bg-gray-500 p-4 rounded-xl text-center">
-              <p>Rain: {weatherData.rain?.['1h'] || 0} mm</p>
+            <div className="bg-gray-500 p-4 rounded-xl text-center flex flex-row justify-center items-center gap-1">
+              <GiHeavyRain />
+              <p>
+                {weatherData.rain?.['1h'] || 0}
+                mm
+              </p>
             </div>
           </div>
           <MdFavoriteBorder
@@ -296,25 +260,25 @@ const WeatherSearch: React.FC = () => {
         <div className="flex flex-wrap justify-center items-center gap-3">
           {history.length > 0 ? (
             history.map(
-              (city, index) =>
-                city.weather &&
-                city.weather[0] && (
+              (item, index) =>
+                item.weather &&
+                item.weather[0] && (
                   <div
                     key={index}
                     className="mb-4 mr-4 p-4 w-64 rounded-lg flex flex-col items-center relative"
                     style={{
                       backgroundImage: `url(${getBackgroundImage(
-                        city.weather[0].main
+                        item.weather[0].main
                       )})`,
                       backgroundSize: 'cover',
                     }}
                   >
                     <div className="flex flex-row gap-2 justify-center items-center">
-                      <h3 className="text-xl font-bold">{city.name}</h3>
-                      <p className="text-white">{city.sys.country}</p>
+                      <h3 className="text-xl font-bold">{item.name}</h3>
+                      <p className="text-white">{item.sys.country}</p>
                     </div>
                     <p className="font-semibold text-yellow-500 mt-2">
-                      {Math.round(city.main.temp - 273.15)}°C
+                      {Math.round(item.main.temp - 273.15)}°C
                     </p>
                   </div>
                 )
