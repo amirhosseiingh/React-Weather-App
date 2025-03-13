@@ -5,7 +5,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { FaTemperatureArrowDown, FaTemperatureArrowUp } from 'react-icons/fa6';
 import { GiHeavyRain } from 'react-icons/gi';
 import {TiWeatherShower,TiWeatherSnow,TiWeatherStormy,TiWeatherSunny,} from 'react-icons/ti';
-import {RangeSlider,RangeSliderTrack,RangeSliderFilledTrack,RangeSliderThumb,} from '@chakra-ui/react';
+import {RangeSlider,RangeSliderTrack,RangeSliderFilledTrack} from '@chakra-ui/react';
 import SearchPageBg from '../assets/images/sanni-sahil-cSm2a_-25YU-unsplash.jpg';
 import { MdDelete, MdFavorite } from 'react-icons/md';
 import { MdFavoriteBorder } from 'react-icons/md';
@@ -23,7 +23,7 @@ import { rainyAnimation } from '../animation/animation';
 import { snowyAnimation } from '../animation/animation';
 import { cloudyAnimation } from '../animation/animation';
 import {WeatherData} from '../interfaces/weatherInterface'
-import { hover } from 'framer-motion';
+
 
 const WeatherSearch: React.FC = () => {
   const [city, setCity] = useState<string>('');
@@ -32,6 +32,8 @@ const WeatherSearch: React.FC = () => {
   const [history, setHistory] = useState<WeatherData[]>([]);
   const toast = useToast();
 
+
+  
   useEffect(() => {
     const savedFavorites = localStorage.getItem('favorites');
     if (savedFavorites) {
