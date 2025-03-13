@@ -64,6 +64,7 @@ const WeatherSearch: React.FC = () => {
           status: 'warning',
           duration: 2000,
           isClosable: true,
+          position: 'top-right',
         });
       }
 
@@ -103,6 +104,7 @@ const WeatherSearch: React.FC = () => {
           status: 'success',
           duration: 2000,
           isClosable: true,
+          position : 'top-right'
         });
       } else {
         toast({
@@ -111,6 +113,7 @@ const WeatherSearch: React.FC = () => {
           status: 'warning',
           duration: 2000,
           isClosable: true,
+          position: 'top-right',
         });
       }
     }
@@ -128,6 +131,7 @@ const WeatherSearch: React.FC = () => {
       status: 'warning',
       duration: 2000,
       isClosable: true,
+      position: 'top-right',
     });
   };
 
