@@ -9,8 +9,8 @@ import React, { useState } from 'react';
 import BackGround from '../assets/images/cloud_sky_pink_177313_1366x768.jpg';
 import axios from 'axios';
 
-
 const UserAuth = () => {
+  // define states
   const [isSignIn, setIsSignIn] = useState(true);
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState('');
@@ -18,6 +18,7 @@ const UserAuth = () => {
   const [username, setUsername] = useState('');
   const toast = useToast();
 
+  // handler change situation
   const handleClick = () => setShow(!show);
   const handleToggle = () => setIsSignIn(!isSignIn);
 
@@ -35,7 +36,6 @@ const UserAuth = () => {
     }
 
     try {
-      console.log('Sending login request...');
       const response = await axios.post(
         'http://api.alikooshesh.ir:3000/api/users/login',
         {
@@ -51,7 +51,7 @@ const UserAuth = () => {
           },
         }
       );
-      console.log('Login response:', response);
+
       toast({
         title: 'Success',
         description: 'Login successful!',
@@ -60,8 +60,8 @@ const UserAuth = () => {
         isClosable: true,
       });
       window.location.href = '/weather-search';
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch (err) {
+      console.error(err);
       toast({
         title: 'Error',
         description: 'Login failed. Please try again.',
@@ -103,7 +103,6 @@ const UserAuth = () => {
           },
         }
       );
-      console.log('Registration response:', response);
       toast({
         title: 'Success',
         description: 'Registration successful!',
@@ -113,7 +112,7 @@ const UserAuth = () => {
       });
       // Save the token, handle response
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error(error);
       toast({
         title: 'Error',
         description: 'Registration failed. Please try again.',
@@ -126,11 +125,11 @@ const UserAuth = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center"
+      className="min-h-screen bg-cover bg-center  flex flex-col items-center justify-center"
       style={{ backgroundImage: `url(${BackGround})` }}
     >
       <div className="flex flex-col items-center justify-center p-4 w-full max-w-md bg-white bg-opacity-70 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-4">
+        <h2 className="text-2xl font-bold text-center mb-4 text-red-300">
           {isSignIn ? 'Sign In' : 'Sign Up'}
         </h2>
         <form

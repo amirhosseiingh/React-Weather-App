@@ -23,6 +23,7 @@ import { rainyAnimation } from '../animation/animation';
 import { snowyAnimation } from '../animation/animation';
 import { cloudyAnimation } from '../animation/animation';
 import {WeatherData} from '../interfaces/weatherInterface'
+import { hover } from 'framer-motion';
 
 const WeatherSearch: React.FC = () => {
   const [city, setCity] = useState<string>('');
@@ -36,7 +37,6 @@ const WeatherSearch: React.FC = () => {
     if (savedFavorites) {
       setFavorites(JSON.parse(savedFavorites));
     }
-
     const savedHistory = localStorage.getItem('history');
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
@@ -51,7 +51,6 @@ const WeatherSearch: React.FC = () => {
       const data = response.data;
       setWeatherData(data);
 
-      // افزودن شهر جستجو شده به تاریخچه تنها در صورتی که از قبل وجود نداشته باشد
       if (!history.some(item => item.name === data.name)) {
         const newHistory = [...history, data];
         setHistory(newHistory);
@@ -67,7 +66,7 @@ const WeatherSearch: React.FC = () => {
       }
 
       setCity('');
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +86,7 @@ const WeatherSearch: React.FC = () => {
         return sunnyBg;
     }
   };
+
   const handleSaveButton = () => {
     if (weatherData) {
       if (!favorites.some(item => item.name === weatherData.name)) {
@@ -113,6 +113,7 @@ const WeatherSearch: React.FC = () => {
       }
     }
   };
+
   const handleDelete = (city: string) => {
     const updatedFavorites = favorites.filter(item => item.name !== city);
 
@@ -127,6 +128,7 @@ const WeatherSearch: React.FC = () => {
       isClosable: true,
     });
   };
+
   const getAnimation = (weather: string) => {
     switch (weather) {
       case 'Clear':
@@ -158,8 +160,9 @@ const WeatherSearch: React.FC = () => {
   };
 
   const animationSrc = weatherData
-    ? getAnimation(weatherData.weather[0].main)
+  ? getAnimation(weatherData.weather[0].main)
     : '';
+
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center relative"
@@ -180,8 +183,9 @@ const WeatherSearch: React.FC = () => {
           p={'6'}
           colorScheme="teal"
           onClick={handleSearch}
-          mb={4}
+          mb={'4'}
           leftIcon={<FaSearch />}
+          bgColor={'blue.800'}
         >
           Search
         </Button>
@@ -194,13 +198,15 @@ const WeatherSearch: React.FC = () => {
               {weatherData.name}, {weatherData.sys.country}
             </h2>
           </div>
-          <DotLottieReact src={animationSrc} loop autoplay />
-          <p className="font-bold text-slate-700 text-4xl mb-2">
-            {Math.round(weatherData.main.temp - 273.15)}°C
-          </p>
-          <p className="text-lg font-semibold text-slate-800">
-            {weatherData.weather[0].description}
-          </p>
+          <div className='flex flex-col justify-center items-center '>
+            <DotLottieReact src={animationSrc} loop autoplay />
+            <p className="font-bold text-slate-700 text-4xl mb-2 font-extrabold">
+              {Math.round(weatherData.main.temp - 273.15)}°C
+            </p>
+            <p className="text-lg font-semibold text-slate-700">
+              {weatherData.weather[0].description}
+            </p>
+          </div>
           <div className="grid grid-cols-2 justify-center items-center gap-2 mt-3 text-white">
             <div className="bg-gray-500 p-4 rounded-xl text-center">
               <p>
@@ -236,8 +242,8 @@ const WeatherSearch: React.FC = () => {
             className="text-purple-700 text-2xl absolute top-2 right-3 position hover:text-red-600"
             onClick={handleSaveButton}
           />
-          <div className="w-[50%] mt-4 flex flex-col justify-center items-center">
-            <p>Cloudiness: {weatherData.clouds.all}%</p>
+          <div className="w-[50%] mt-4 flex flex-col justify-center items-center gap-1">
+            <p className='text-slate-700 font-semibold'>Cloudiness: {weatherData.clouds.all}%</p>
             <RangeSlider
               value={[weatherData.clouds.all]}
               min={0}
@@ -245,10 +251,10 @@ const WeatherSearch: React.FC = () => {
               step={1}
               isReadOnly
             >
-              <RangeSliderTrack>
-                <RangeSliderFilledTrack />
+              <RangeSliderTrack bgColor={'blue.100'} height={'2'}>
+                <RangeSliderFilledTrack  bgColor={'blue.600'}/>
               </RangeSliderTrack>
-              <RangeSliderThumb index={0} />
+              {/* <RangeSliderThumb bgColor={'bl'}  index={0} /> */}
             </RangeSlider>
           </div>
         </div>
