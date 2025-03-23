@@ -1,10 +1,16 @@
-import {Input,Button,InputGroup,InputRightElement,useToast,} from '@chakra-ui/react';
+import {
+  Input,
+  Button,
+  InputGroup,
+  InputRightElement,
+  useToast,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import BackGround from '../assets/images/cloud_sky_pink_177313_1366x768.jpg';
 import axios from 'axios';
 
-const UserAuth = () => {
 
+const UserAuth = () => {
   // define states
   const [isSignIn, setIsSignIn] = useState(true);
   const [show, setShow] = useState(false);
@@ -17,131 +23,136 @@ const UserAuth = () => {
   const handleClick = () => setShow(!show);
   const handleToggle = () => setIsSignIn(!isSignIn);
 
-const handleSignInSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (email === '' || password === '') {
-    toast({
-      title: 'Error',
-      description: 'Please fill all fields.',
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-      position : 'top-right'
-    });
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      'http://api.alikooshesh.ir:3000/api/users/login',
-      { email, password },
-      {
-        headers: {
-          accept: '*/*',
-          'Content-Type': 'application/json',
-          api_key:
-            'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
-        },
-      }
-    );
-
-    const token = response.data.token;
-    const userId = response.data.user?._id;
-
-    if (token && userId) {
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId);
-      console.log('Token & UserId saved:', token, userId);
-    } else {
-      console.error('Token or UserId missing in response!');
+  const handleSignInSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email === '' || password === '') {
+      toast({
+        title: 'Error',
+        description: 'Please fill all fields.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+      return;
     }
 
-    toast({
-      title: 'Success',
-      description: 'Login successful!',
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-      position : 'top-right'
-    });
-
-    window.location.href = '/weather-search';
-  } catch (err) {
-    console.error(err);
-    toast({
-      title: 'Error',
-      description: 'Login failed. Please try again.',
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-      position : 'top-right'
-    });
-  }
-};
-
-
-
-const handleSignUpSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (username === '' || email === '' || password === '') {
-    toast({
-      title: 'Error',
-      description: 'Please fill all fields.',
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-    });
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      'http://api.alikooshesh.ir:3000/api/users/register',
-      { username, email, password },
-      {
-        headers: {
-          accept: '*/*',
-          'Content-Type': 'application/json',
-          api_key:
-            'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
-        },
-      }
-    );
-
-    // ذخیره توکن و userId در localStorage
-    const token = response.data.token;
-    const userId = response.data.user?._id;
-
-    if (token && userId) {
+    try {
+      const response = await axios.post(
+        'http://api.alikooshesh.ir:3000/api/users/login',
+        { email, password },
+        {
+          headers: {
+            accept: '*/*',
+            'Content-Type': 'application/json',
+            api_key:
+              'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
+          },
+        }
+      );
+      console.log(response.data);
+      // handleUserName()
+      const token = response.data.accessToken;
       localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId);
-      console.log('Token & UserId saved:', token, userId);
-    } else {
-      console.error('Token or UserId missing in response!');
+      toast({
+        title: 'Success',
+        description: 'Login successful!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+      window.location.href = '/weather-search';
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Error',
+        description: 'Login failed. Please try again.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
+  };
+
+  const handleSignUpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === '' || email === '' || password === '') {
+      toast({
+        title: 'Error',
+        description: 'Please fill all fields.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
     }
 
-    toast({
-      title: 'Success',
-      description: 'Registration successful!',
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-    });
+    try {
+      const response = await axios.post(
+        'http://api.alikooshesh.ir:3000/api/users/register',
+        { username, email, password },
+        {
+          headers: {
+            accept: '*/*',
+            'Content-Type': 'application/json',
+            api_key:
+              'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
+          },
+        }
+      );
+      const token = response.data.accessToken;
+      localStorage.setItem('token', token);
+      toast({
+        title: 'Success',
+        description: 'Registration successful!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
 
-    window.location.href = '/weather-search';
-  } catch (error) {
-    toast({
-      title: 'Error',
-      description: 'Registration failed. Please try again.',
-      status: 'error',
-      duration: 5000,
-      isClosable: true,
-      position : 'top-right'
-    });
-  }
-};
+      window.location.href = '/weather-search';
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Registration failed. Please try again.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
+  };
 
+  // const handleUserName = async () => {
+  //   console.log('Stored Token:', localStorage.getItem('token'));
 
+  //   const tokens =await localStorage.getItem('token');
+  //   if (!tokens) {
+  //     console.log('No token found');
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await axios.get(
+  //       'http://api.alikooshesh.ir:3000/api/users/me',
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${tokens}`,
+  //           accept: '*/*',
+  //           api_key:
+  //             'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
+  //         },
+  //       }
+  //     );
+  //     console.log(res.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //     console.log('Token:', tokens);
+  //   }
+  // };
 
   return (
     <div
@@ -192,6 +203,9 @@ const handleSignUpSubmit = async (e: React.FormEvent) => {
           <Button
             type="submit"
             className="w-full bg-purple-500 text-white py-2 rounded-lg shadow-md"
+            disabled={
+              email === '' || password === '' || (!isSignIn && username === '')
+            }
           >
             {isSignIn ? 'Sign In' : 'Sign Up'}
           </Button>

@@ -4,8 +4,17 @@ import { FaSearch } from 'react-icons/fa';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { FaTemperatureArrowDown, FaTemperatureArrowUp } from 'react-icons/fa6';
 import { GiHeavyRain } from 'react-icons/gi';
-import {TiWeatherShower,TiWeatherSnow,TiWeatherStormy,TiWeatherSunny,} from 'react-icons/ti';
-import {RangeSlider,RangeSliderTrack,RangeSliderFilledTrack} from '@chakra-ui/react';
+import {
+  TiWeatherShower,
+  TiWeatherSnow,
+  TiWeatherStormy,
+  TiWeatherSunny,
+} from 'react-icons/ti';
+import {
+  RangeSlider,
+  RangeSliderTrack,
+  RangeSliderFilledTrack,
+} from '@chakra-ui/react';
 import SearchPageBg from '../assets/images/sanni-sahil-cSm2a_-25YU-unsplash.jpg';
 import { MdDelete, MdFavorite } from 'react-icons/md';
 import { MdFavoriteBorder } from 'react-icons/md';
@@ -22,8 +31,7 @@ import { sunnyAnimation } from '../animation/animation';
 import { rainyAnimation } from '../animation/animation';
 import { snowyAnimation } from '../animation/animation';
 import { cloudyAnimation } from '../animation/animation';
-import {WeatherData} from '../interfaces/weatherInterface'
-
+import { WeatherData } from '../interfaces/weatherInterface';
 
 const WeatherSearch: React.FC = () => {
   const [city, setCity] = useState<string>('');
@@ -32,18 +40,59 @@ const WeatherSearch: React.FC = () => {
   const [history, setHistory] = useState<WeatherData[]>([]);
   const toast = useToast();
 
+  // let username = '';
 
-  
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
+  // useEffect(() => {
+  //   const savedFavorites = localStorage.getItem('favorites');
+  //   if (savedFavorites) {
+  //     setFavorites(JSON.parse(savedFavorites));
+  //   }
+  //   const savedHistory = localStorage.getItem('history');
+  //   if (savedHistory) {
+  //     setHistory(JSON.parse(savedHistory));
+  //   }
+  // }, []);
+  const handleUserName = async () => {
+    console.log('Stored Token:', localStorage.getItem('token'));
+
+    const tokens = await localStorage.getItem('token');
+    if (!tokens) {
+      console.log('No token found');
+      return;
     }
-    const savedHistory = localStorage.getItem('history');
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+
+    try {
+      const res = await axios.get(
+        'http://api.alikooshesh.ir:3000/api/users/me',
+        {
+          headers: {
+            Authorization: `Bearer ${tokens}`,
+            accept: '*/*',
+            api_key:
+              'Amirhossein-1380sdcBhgHNtYZX5OgAiqKZWWRGOOBUYOBcXGvU2j6RYFrpAQILkWYmyq3FXEw4MOFR7KxES89oP3WCUvvuIpZR3kUI1p4oW0Hebc4cBuxLxED9XzXQ',
+          },
+        }
+      );
+      console.log(res.data);
+      localStorage.setItem('userHistory', res.data.username) 
+    } catch (error) {
+      console.error(error);
+      console.log('Token:', tokens);
     }
-  }, []);
+  };
+
+// useEffect(() => {
+//   handleUserName;
+// }, []);
+
+
+handleUserName()
+const handlehistory: { userName: any; history: any[] } = {
+  userName: localStorage.getItem('userHistory'),
+  history: [],
+};
+
+
 
   const handleSearch = async () => {
     try {
@@ -51,6 +100,11 @@ const WeatherSearch: React.FC = () => {
         `${BASE_SEARCH_URL}${city}&appid=${API_KEY}`
       );
       const data = response.data;
+      console.log(data.name);
+      const name = data.name;
+      handlehistory.history.push(name);
+      console.log(handlehistory);
+      setHistory(handlehistory)
       setWeatherData(data);
 
       if (!history.some(item => item.name === data.name)) {
@@ -70,6 +124,7 @@ const WeatherSearch: React.FC = () => {
 
       setCity('');
       // console.log(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +159,7 @@ const WeatherSearch: React.FC = () => {
           status: 'success',
           duration: 2000,
           isClosable: true,
-          position : 'top-right'
+          position: 'top-right',
         });
       } else {
         toast({
@@ -166,7 +221,7 @@ const WeatherSearch: React.FC = () => {
   };
 
   const animationSrc = weatherData
-  ? getAnimation(weatherData.weather[0].main)
+    ? getAnimation(weatherData.weather[0].main)
     : '';
 
   return (
@@ -204,7 +259,7 @@ const WeatherSearch: React.FC = () => {
               {weatherData.name}, {weatherData.sys.country}
             </h2>
           </div>
-          <div className='flex flex-col justify-center items-center '>
+          <div className="flex flex-col justify-center items-center ">
             <DotLottieReact src={animationSrc} loop autoplay />
             <p className="font-bold text-slate-700 text-4xl mb-2 font-extrabold">
               {Math.round(weatherData.main.temp - 273.15)}°C
@@ -249,7 +304,9 @@ const WeatherSearch: React.FC = () => {
             onClick={handleSaveButton}
           />
           <div className="w-[50%] mt-4 flex flex-col justify-center items-center gap-1">
-            <p className='text-slate-700 font-semibold'>Cloudiness: {weatherData.clouds.all}%</p>
+            <p className="text-slate-700 font-semibold">
+              Cloudiness: {weatherData.clouds.all}%
+            </p>
             <RangeSlider
               value={[weatherData.clouds.all]}
               min={0}
@@ -258,7 +315,7 @@ const WeatherSearch: React.FC = () => {
               isReadOnly
             >
               <RangeSliderTrack bgColor={'blue.100'} height={'2'}>
-                <RangeSliderFilledTrack  bgColor={'blue.600'}/>
+                <RangeSliderFilledTrack bgColor={'blue.600'} />
               </RangeSliderTrack>
               {/* <RangeSliderThumb bgColor={'bl'}  index={0} /> */}
             </RangeSlider>
